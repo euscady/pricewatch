@@ -365,8 +365,21 @@ button,input,select,textarea{font-family:'Space Grotesk',-apple-system,BlinkMacS
     const hint = document.getElementById('listHint');
     list.innerHTML = '<div class="empty-state">Loading…</div>';
 
-    const res = await fetch('/api/products');
-    const data = await res.json();
+    let data;
+    try{
+      const res = await fetch('/api/products');
+      if(!res.ok){
+        let detail = '';
+        try{ detail = (await res.json()).error || ''; }catch(e){}
+        throw new Error('Server returned ' + res.status + (detail ? ': ' + detail : ''));
+      }
+      data = await res.json();
+    }catch(e){
+      list.innerHTML = '<div class="empty-state">Couldn’t load your products (' + (e.message || 'network error') + '). Check the Vercel function logs for this project, or try refreshing.</div>';
+      hint.textContent = '';
+      return;
+    }
+
     PRODUCTS = data.products || [];
 
     if(PRODUCTS.length === 0){
