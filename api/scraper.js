@@ -176,6 +176,13 @@ function stripHtml(html) {
 }
 
 async function extractWithAI(html, url, opts) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    // No key configured — the app still works, this link just can't be
+    // read since it has no free structured data. Set ANTHROPIC_API_KEY
+    // later if you start hitting this on links you actually care about.
+    return { found: false, method: 'no-api-key-configured' };
+  }
+
   const model = opts.model || 'claude-sonnet-4-5';
   const effort = opts.effort || 'medium';
   const thinkingBudget = effort === 'high' ? 4000 : effort === 'low' ? 0 : 1500;
