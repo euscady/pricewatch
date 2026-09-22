@@ -18,7 +18,7 @@ function db() {
   return {
     query(text, params) {
       return Promise.race([
-        rawSql.query(text, params),
+        rawSql(text, params),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Database did not respond within 10s — check DATABASE_URL in your Vercel project settings.')), 10000)
         )
