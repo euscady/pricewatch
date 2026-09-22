@@ -10,6 +10,9 @@
   "functions": {
     "api/cron/check-prices.js": {
       "maxDuration": 300
+    },
+    "api/index.js": {
+      "maxDuration": 60
     }
   }
 }
