@@ -302,9 +302,17 @@ button,input,select,textarea{font-family:'Space Grotesk',-apple-system,BlinkMacS
   const GENERIC_ICON = '<svg viewBox="0 0 64 64" fill="none"><rect x="12" y="20" width="40" height="32" rx="1" stroke="currentColor" stroke-width="2.2"/><path d="M12 28H52" stroke="currentColor" stroke-width="2.2"/><path d="M24 20L28 12H36L40 20" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>';
 
   function thumbHtml(imageUrl){
-    if(imageUrl) return '<img src="'+imageUrl+'" alt="" loading="lazy" onerror="this.parentElement.innerHTML=\'' + GENERIC_ICON.replace(/'/g,"\\'") + '\'">';
+    if(imageUrl) return '<img src="'+imageUrl+'" alt="" loading="lazy" onerror="window.__thumbFallback(this)">';
     return GENERIC_ICON;
   }
+  // Embedding the fallback SVG's own markup (it has double quotes) directly
+  // inside an onerror="..." HTML attribute breaks the attribute early — this
+  // keeps the swap in real JS instead, so a broken product image reliably
+  // falls back to the generic icon rather than the browser's default
+  // broken-image glyph.
+  window.__thumbFallback = function(imgEl){
+    if(imgEl && imgEl.parentElement) imgEl.parentElement.innerHTML = GENERIC_ICON;
+  };
 
   function statusOf(p){
     if(!p.latest) return 'pending';
