@@ -3,6 +3,7 @@
 // actual sub-routing (/api/auth/..., /api/products/...) from there.
 
 const express = require('express');
+require('express-async-errors'); // must load right after express, before any routers are used — patches Express 4 to forward rejected promises from async route handlers to the error middleware below, instead of letting the request hang forever with no response
 const cookieSession = require('cookie-session');
 
 const authRoutes = require('./routes/auth');
