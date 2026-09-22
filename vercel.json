@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/api/auth/:path*", "destination": "/api/index" },
+    { "source": "/api/products/:path*", "destination": "/api/index" },
+    { "source": "/api/products", "destination": "/api/index" }
+  ],
+  "crons": [
+    { "path": "/api/cron/check-prices", "schedule": "0 13 * * *" }
+  ],
+  "functions": {
+    "api/cron/check-prices.js": {
+      "maxDuration": 300
+    }
+  }
+}
